@@ -36,6 +36,8 @@ PLAYER_IMGLEFT = 'default(3)left.png'
 #wall settings
 WALL_IMG = 'wall2.png'
 
+FLOOR_IMG = 'wall1.png'
+
 #start sreen
 #START_IMG = pygame.image.load(os.path.join(img_folder,'AnemoiaStart1.png')).convert()
 

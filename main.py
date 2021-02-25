@@ -16,6 +16,18 @@ class Wall(pg.sprite.Sprite):
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
+
+class Floor(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = game.floor_img
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
         
 class Game:
     def __init__(self):
@@ -39,6 +51,8 @@ class Game:
         self.player_imgleft = pg.image.load(path.join(img_folder, PLAYER_IMGLEFT)).convert_alpha()
         
         #Walls/start screen
+        self.floor_img = pg.image.load(path.join(img_folder, FLOOR_IMG)).convert_alpha()
+        self.floor_img = pygame.transform.scale(self.floor_img,(TILESIZE, TILESIZE))
         self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
         self.start_img = pg.image.load(path.join(img_folder, "AnemoiaStart1.png")).convert_alpha()
         self.start_img = pygame.transform.scale(self.start_img, (WIDTH, HEIGHT))
@@ -47,6 +61,10 @@ class Game:
         self.player_imgright = pygame.transform.scale(self.player_imgright, (64, 96))
         self.player_imgleft = pygame.transform.scale(self.player_imgleft, (64, 96))
         self.player_imgdown = pygame.transform.scale(self.player_imgdown, (64, 96))
+        #End screen
+        self.end_img =pg.image.load(path.join(img_folder, "gameOver.png")).convert_alpha()
+        self.end_img = pygame.transform.scale(self.end_img, (WIDTH, HEIGHT))
+        
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
@@ -57,6 +75,8 @@ class Game:
                     Wall(self, col, row)
                 if tile == 'P':
                     self.player = Player(self, col, row)
+                if tile == 'F':
+                    Floor(self, col, row)
         self.camera = Camera(self.map.width, self.map.height)
 
     def run(self):
@@ -90,6 +110,18 @@ class Game:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
 
+    def show_end_screen(self):
+      self.screen.blit(self.end_img,(0,0))
+      pygame.display.flip()
+      waiting = True
+      while waiting:
+          for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.quit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE: #CHANGE THIS KEY????
+                    self.quit()
+
     def events(self):
         # catch all events here
         for event in pg.event.get():
@@ -98,6 +130,8 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.quit()
+                if event.key == pg.K_k:
+                    self.show_end_screen()
 
     def show_start_screen(self):
         pass
@@ -115,6 +149,9 @@ class Game:
                     pygame.quit()
                 if event.type == pygame.KEYUP:
                     goscreen = False
+ 
+
+    
         
 
 # create the game object

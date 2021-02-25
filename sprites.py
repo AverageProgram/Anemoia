@@ -1,6 +1,5 @@
 import pygame as pg
 from settings import *
-#from main import *
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -33,6 +32,10 @@ class Player(pg.sprite.Sprite):
         if self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
+            '''
+        if keys[pg.K_k]:
+            show_end_screen()
+            '''
 
     #Set images for other direction
         if self.action== "UP":
