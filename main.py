@@ -32,10 +32,14 @@ class Floor(pg.sprite.Sprite):
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.load_data()
+        
+        
+        
 
         
     #LOAD IMAGES/FOLDERS
@@ -64,7 +68,10 @@ class Game:
         #End screen
         self.end_img =pg.image.load(path.join(img_folder, "gameOver.png")).convert_alpha()
         self.end_img = pygame.transform.scale(self.end_img, (WIDTH, HEIGHT))
-        
+        #Sounds
+        self.sound=0
+        self.sounds=['Betrayal.wav','Dark room.wav', 'Split perspective.wav']
+
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
@@ -121,17 +128,35 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE: #CHANGE THIS KEY????
                     self.quit()
+                    
+    def changeMusic(self, track):
+        game_folder = path.dirname(__file__)
+        self.snd_folder= path.join(game_folder, 'snd')
+        if track == 9:
+            pg.mixer.music.stop()
+        else:
+            pg.mixer.music.load(os.path.join(self.snd_folder, self.sounds[track]))
+            pg.mixer.music.play(loops=-1) 
+        
 
     def events(self):
         # catch all events here
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
-            if event.type == pg.KEYDOWN:
+            if event.type == pg.KEYUP:
                 if event.key == pg.K_ESCAPE:
                     self.quit()
                 if event.key == pg.K_k:
                     self.show_end_screen()
+                if event.key==pg.K_1:
+                    self.changeMusic(0)
+                if event.key==pg.K_2:
+                    self.changeMusic(1)
+                if event.key==pg.K_3:
+                    self.changeMusic(2)
+                if event.key==pg.K_9:
+                    self.changeMusic(9)
 
     def show_start_screen(self):
         pass
